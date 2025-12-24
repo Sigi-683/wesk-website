@@ -1,0 +1,25 @@
+services:
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server/database.sqlite:/app/database.sqlite
+      - ./server/uploads:/app/uploads
+    environment:
+      - PORT=3000
+      # Ensure secret is strong in production, this is a default
+      - JWT_SECRET=${JWT_SECRET:-change_this_secret_in_prod}
+    restart: always

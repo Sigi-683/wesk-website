@@ -1,0 +1,45 @@
+nohup: ignoring input
+Server is running on port 3000
+Database synced
+DEBUG: selectChalet userId: 5 req.user: {
+  id: 5,
+  email: 'test1766582717979@example.com',
+  isAdmin: false,
+  iat: 1766582718,
+  exp: 1766669118
+}
+DEBUG: selectChalet userId: 6 req.user: {
+  id: 6,
+  email: 'test1766582719220@example.com',
+  isAdmin: false,
+  iat: 1766582719,
+  exp: 1766669119
+}
+DEBUG: selectChalet userId: 7 req.user: {
+  id: 7,
+  email: 'adrien.malgouyres@epita.fr',
+  isAdmin: false,
+  iat: 1766582828,
+  exp: 1766669228
+}
+DEBUG: selectChalet userId: 9 req.user: {
+  id: 9,
+  email: 'adrien.malgouyres@outlook.fr',
+  isAdmin: false,
+  iat: 1766583832,
+  exp: 1766670232
+}
+DEBUG: selectChalet userId: 1 req.user: {
+  id: 1,
+  email: 'admin@wesk.com',
+  isAdmin: true,
+  iat: 1766585407,
+  exp: 1766671807
+}
+DEBUG: selectChalet userId: 1 req.user: {
+  id: 1,
+  email: 'admin@wesk.com',
+  isAdmin: true,
+  iat: 1766585822,
+  exp: 1766672222
+}
