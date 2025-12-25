@@ -16,7 +16,12 @@ export default function Register() {
             await register(email, password);
             navigate('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.message || 'Erreur lors de l\'inscription. Cet email est peut-être déjà utilisé.');
+            const resData = err.response?.data;
+            if (resData?.errors && Array.isArray(resData.errors)) {
+                setError(resData.errors.map(e => e.msg).join(', '));
+            } else {
+                setError(resData?.message || 'Erreur lors de l\'inscription. Cet email est peut-être déjà utilisé.');
+            }
         }
     };
 
