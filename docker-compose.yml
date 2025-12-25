@@ -4,7 +4,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "127.0.0.1:8080:80"
     depends_on:
       - backend
     restart: always
@@ -14,12 +14,11 @@ services:
       context: ./server
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     volumes:
       - ./server/database.sqlite:/app/database.sqlite
       - ./server/uploads:/app/uploads
     environment:
       - PORT=3000
-      # Ensure secret is strong in production, this is a default
-      - JWT_SECRET=${JWT_SECRET:-change_this_secret_in_prod}
+      - JWT_SECRET=CHANGE_MOI_IMMEDIATEMENT
     restart: always
