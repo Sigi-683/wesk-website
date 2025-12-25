@@ -16,9 +16,10 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
     volumes:
-      - ./server/database.sqlite:/app/database.sqlite
+      - ./database.sqlite:/app/database.sqlite
       - ./server/uploads:/app/uploads
     environment:
       - PORT=3000
+      - DB_PATH=/app/database.sqlite
       - JWT_SECRET=CHANGE_MOI_IMMEDIATEMENT
     restart: always
