@@ -69,7 +69,7 @@ sequelize.authenticate()
     })
     .then(() => {
         console.log('WAL mode enabled');
-        return sequelize.sync({ alter: true });
+        return sequelize.sync({ alter: false });
     })
     .then(() => {
         console.log('Database synced');
