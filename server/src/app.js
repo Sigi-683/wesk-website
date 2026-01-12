@@ -20,6 +20,12 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// Debug Middleware: Log all requests
+app.use((req, res, next) => {
+    console.log(`[REQUEST] ${req.method} ${req.url}`);
+    next();
+});
+
 const authRoutes = require('./routes/auth.routes');
 const chaletRoutes = require('./routes/chalet.routes');
 const userRoutes = require('./routes/user.routes');
@@ -63,12 +69,19 @@ app.use((err, req, res, next) => {
 
 // Sync database
 sequelize.authenticate()
+console.log('Database connected');
+return sequelize.query('PRAGMA journal_mode;');
+})
+    .then(([results]) => {
+    console.log(`[DB] Current Journal Mode: ${results[0].journal_mode}`);
+    if (results[0].journal_mode !== 'wal') {
+        return sequelize.query('PRAGMA journal_mode = WAL;')
+            .then(([res]) => {
+                console.log(`[DB] Set Journal Mode to: ${res[0].journal_mode}`);
+            });
+    }
+})
     .then(() => {
-        console.log('Database connected');
-        return sequelize.query('PRAGMA journal_mode = WAL;');
-    })
-    .then(() => {
-        console.log('WAL mode enabled');
         return sequelize.sync({ alter: false });
     })
     .then(() => {
