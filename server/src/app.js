@@ -69,18 +69,19 @@ app.use((err, req, res, next) => {
 
 // Sync database
 sequelize.authenticate()
-console.log('Database connected');
-return sequelize.query('PRAGMA journal_mode;');
-})
+    .then(() => {
+        console.log('Database connected');
+        return sequelize.query('PRAGMA journal_mode;');
+    })
     .then(([results]) => {
-    console.log(`[DB] Current Journal Mode: ${results[0].journal_mode}`);
-    if (results[0].journal_mode !== 'wal') {
-        return sequelize.query('PRAGMA journal_mode = WAL;')
-            .then(([res]) => {
-                console.log(`[DB] Set Journal Mode to: ${res[0].journal_mode}`);
-            });
-    }
-})
+        console.log(`[DB] Current Journal Mode: ${results[0].journal_mode}`);
+        if (results[0].journal_mode !== 'wal') {
+            return sequelize.query('PRAGMA journal_mode = WAL;')
+                .then(([res]) => {
+                    console.log(`[DB] Set Journal Mode to: ${res[0].journal_mode}`);
+                });
+        }
+    })
     .then(() => {
         return sequelize.sync({ alter: false });
     })
