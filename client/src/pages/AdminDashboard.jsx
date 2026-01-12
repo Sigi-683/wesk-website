@@ -91,7 +91,7 @@ const AdminDashboard = () => {
             fetchData();
         } catch (error) {
             console.error(error);
-            alert('Mise à jour échouée');
+            alert(`Mise à jour échouée: ${error.message} \nStatus: ${error.response?.status} \nData: ${JSON.stringify(error.response?.data)}`);
         }
     };
 
