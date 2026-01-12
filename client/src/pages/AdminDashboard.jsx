@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
-import { HomeIcon, ArrowRightOnRectangleIcon, UserGroupIcon, HomeModernIcon, CheckCircleIcon, XCircleIcon, ShieldCheckIcon, DocumentArrowUpIcon, TrashIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, ArrowRightOnRectangleIcon, UserGroupIcon, HomeModernIcon, CheckCircleIcon, XCircleIcon, ShieldCheckIcon, DocumentArrowUpIcon, TrashIcon, Bars3Icon, XMarkIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 
 const AdminDashboard = () => {
     const { logout } = useAuth();
@@ -16,6 +16,10 @@ const AdminDashboard = () => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newChalet, setNewChalet] = useState({ name: '', description: '', capacity: 6 });
     const [chaletImage, setChaletImage] = useState(null);
+
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editingChalet, setEditingChalet] = useState(null);
+    const [editImage, setEditImage] = useState(null);
 
     const [newAllowedEmail, setNewAllowedEmail] = useState('');
     const [importing, setImporting] = useState(false);
@@ -49,6 +53,37 @@ const AdminDashboard = () => {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const handleEditClick = (chalet) => {
+        setEditingChalet({ ...chalet });
+        setShowEditModal(true);
+        setEditImage(null);
+    };
+
+    const handleUpdateChalet = async (e) => {
+        e.preventDefault();
+        try {
+            const formData = new FormData();
+            formData.append('name', editingChalet.name);
+            formData.append('description', editingChalet.description);
+            formData.append('capacity', editingChalet.capacity);
+            if (editImage) {
+                formData.append('image', editImage);
+            }
+
+            await api.put(`/chalets/${editingChalet.id}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            setShowEditModal(false);
+            setEditingChalet(null);
+            setEditImage(null);
+            fetchData();
+            alert('Chalet mis à jour avec succès');
+        } catch (error) {
+            console.error(error);
+            alert(`Erreur lors de la mise à jour : ${error.message} \nStatus: ${error.response?.status}`);
+        }
+    };
 
     const handleCreateChalet = async (e) => {
         e.preventDefault();
@@ -365,6 +400,71 @@ const AdminDashboard = () => {
                         </div>
                     )}
 
+                    {/* Edit Chalet Modal */}
+                    {showEditModal && editingChalet && (
+                        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                            <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md animate-fade-in-up">
+                                <h2 className="text-2xl font-bold text-slate-900 mb-4">Modifier le Chalet</h2>
+                                <form onSubmit={handleUpdateChalet} className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">Nom du Chalet</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={editingChalet.name}
+                                            onChange={e => setEditingChalet({ ...editingChalet, name: e.target.value })}
+                                            className="w-full rounded-lg border-slate-300 focus:ring-ski-accent focus:border-ski-accent"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
+                                        <textarea
+                                            value={editingChalet.description || ''}
+                                            onChange={e => setEditingChalet({ ...editingChalet, description: e.target.value })}
+                                            className="w-full rounded-lg border-slate-300 focus:ring-ski-accent focus:border-ski-accent"
+                                            rows="3"
+                                        ></textarea>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">Mettre à jour l'image (optionnel)</label>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={e => setEditImage(e.target.files[0])}
+                                            className="w-full text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-ski-accent file:text-white hover:file:bg-ski-600"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">Capacité</label>
+                                        <input
+                                            type="number"
+                                            required
+                                            min="1"
+                                            value={editingChalet.capacity}
+                                            onChange={e => setEditingChalet({ ...editingChalet, capacity: parseInt(e.target.value) })}
+                                            className="w-full rounded-lg border-slate-300 focus:ring-ski-accent focus:border-ski-accent"
+                                        />
+                                    </div>
+                                    <div className="flex gap-3 justify-end mt-6">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowEditModal(false)}
+                                            className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                                        >
+                                            Annuler
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="btn btn-primary px-4 py-2"
+                                        >
+                                            Enregistrer
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Content Area */}
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                         {activeTab === 'chalets' && (
@@ -393,12 +493,20 @@ const AdminDashboard = () => {
                                                 <td className="px-6 py-4 text-slate-600 max-w-xs truncate">
                                                     {chalet.Users?.map(u => u.email).join(', ') || <span className="text-slate-400 italic">Vide</span>}
                                                 </td>
-                                                <td className="px-6 py-4">
+                                                <td className="px-6 py-4 flex gap-3">
+                                                    <button
+                                                        onClick={() => handleEditClick(chalet)}
+                                                        className="text-blue-600 hover:text-blue-800 font-medium hover:bg-blue-50 p-1 rounded transition-colors"
+                                                        title="Modifier"
+                                                    >
+                                                        <PencilSquareIcon className="h-5 w-5" />
+                                                    </button>
                                                     <button
                                                         onClick={() => handleDeleteChalet(chalet.id)}
-                                                        className="text-red-600 hover:text-red-800 font-medium hover:underline"
+                                                        className="text-red-600 hover:text-red-800 font-medium hover:bg-red-50 p-1 rounded transition-colors"
+                                                        title="Supprimer"
                                                     >
-                                                        Supprimer
+                                                        <TrashIcon className="h-5 w-5" />
                                                     </button>
                                                 </td>
                                             </tr>

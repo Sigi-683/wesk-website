@@ -98,7 +98,13 @@ exports.updateChalet = async (req, res) => {
         if (!chalet) {
             return res.status(404).json({ message: 'Chalet not found' });
         }
-        await chalet.update(req.body);
+
+        const updateData = { ...req.body };
+        if (req.file) {
+            updateData.imageUrl = `/uploads/${req.file.filename}`;
+        }
+
+        await chalet.update(updateData);
         res.json(chalet);
     } catch (error) {
         res.status(500).json({ message: 'Error updating chalet', error: error.message });

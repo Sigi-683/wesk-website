@@ -11,7 +11,7 @@ router.post('/:id/unselect', verifyToken, chaletController.unselectChalet);
 
 // Admin routes
 router.post('/', [verifyToken, isAdmin, upload.single('image')], chaletController.createChalet);
-router.put('/:id', [verifyToken, isAdmin], chaletController.updateChalet);
+router.put('/:id', [verifyToken, isAdmin, upload.single('image')], chaletController.updateChalet);
 router.delete('/:id', [verifyToken, isAdmin], chaletController.deleteChalet);
 
 module.exports = router;
