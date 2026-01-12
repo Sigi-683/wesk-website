@@ -5,6 +5,7 @@ exports.getAllUsers = async (req, res) => {
     try {
         if (!req.user.isAdmin) return res.status(403).json({ message: 'Admin access required' });
         const users = await User.findAll({ attributes: { exclude: ['password'] } });
+        console.log(`[API] getAllUsers found ${users.length} items`);
         res.json(users);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching users', error: error.message });

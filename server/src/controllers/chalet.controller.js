@@ -3,8 +3,9 @@ const { Chalet, User } = require('../models');
 exports.getAllChalets = async (req, res) => {
     try {
         const chalets = await Chalet.findAll({
-            include: [{ model: User, attributes: ['id', 'email', 'cautionGiven', 'waiverGiven'] }] // Default alias is 'Users' or just the model name pluralized usually? We'll rely on auto or check index.js
+            include: [{ model: User, attributes: ['id', 'email', 'cautionGiven', 'waiverGiven'] }]
         });
+        console.log(`[API] getAllChalets found ${chalets.length} items`);
         res.json(chalets);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching chalets', error: error.message });
