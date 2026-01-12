@@ -62,7 +62,15 @@ app.use((err, req, res, next) => {
 
 
 // Sync database
-sequelize.sync({ alter: true })
+sequelize.authenticate()
+    .then(() => {
+        console.log('Database connected');
+        return sequelize.query('PRAGMA journal_mode = WAL;');
+    })
+    .then(() => {
+        console.log('WAL mode enabled');
+        return sequelize.sync({ alter: true });
+    })
     .then(() => {
         console.log('Database synced');
     })
