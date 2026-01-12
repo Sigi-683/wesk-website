@@ -20,7 +20,7 @@ const Landing = () => {
             </nav>
 
             {/* Hero Section */}
-            <div className="relative h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden">
+            <div className="relative h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden pt-20 sm:pt-0">
                 {/* Background Pattern/Overlay */}
                 <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent pointer-events-none"></div>
 
