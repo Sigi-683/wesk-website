@@ -3,13 +3,14 @@ import api from '../api';
 import ChaletCard from '../components/ChaletCard';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
-import { UserCircleIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
+import { UserCircleIcon, ArrowRightOnRectangleIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
     const [chalets, setChalets] = useState([]);
     const [loading, setLoading] = useState(true);
     const { user, logout } = useAuth();
     const [userHasSelection, setUserHasSelection] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const fetchChalets = async () => {
         try {
@@ -54,22 +55,61 @@ export default function Dashboard() {
                         <span className="font-bold text-xl text-slate-800 tracking-tight hidden sm:block">WESK 2026</span>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    {/* Desktop Menu */}
+                    <div className="hidden sm:flex items-center gap-4">
                         {user?.isAdmin && (
-                            <Link to="/admin" className="text-slate-600 hover:text-ski-600 font-medium transition-colors hidden sm:block">
+                            <Link to="/admin" className="text-slate-600 hover:text-ski-600 font-medium transition-colors">
                                 Admin Dashboard
                             </Link>
                         )}
                         <Link to="/profile" className="flex items-center gap-2 text-slate-600 hover:text-ski-600 transition-colors">
                             <UserCircleIcon className="h-6 w-6" />
-                            <span className="font-medium hidden sm:block">{user.email}</span>
+                            <span className="font-medium">{user.email}</span>
                         </Link>
-                        <div className="h-6 w-px bg-slate-300 mx-2 hidden sm:block"></div>
+                        <div className="h-6 w-px bg-slate-300 mx-2"></div>
                         <button onClick={logout} className="text-slate-500 hover:text-red-500 transition-colors" title="Se déconnecter">
                             <ArrowRightOnRectangleIcon className="h-6 w-6" />
                         </button>
                     </div>
+
+                    {/* Mobile Menu Button */}
+                    <div className="flex items-center sm:hidden">
+                        <button
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="text-slate-500 hover:text-slate-700 p-2"
+                        >
+                            {isMobileMenuOpen ? (
+                                <XMarkIcon className="h-6 w-6" />
+                            ) : (
+                                <Bars3Icon className="h-6 w-6" />
+                            )}
+                        </button>
+                    </div>
                 </div>
+
+                {/* Mobile Menu */}
+                {isMobileMenuOpen && (
+                    <div className="sm:hidden bg-white border-t border-slate-200 px-4 py-4 space-y-4 shadow-lg animate-fade-in-down">
+                        <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+                            <UserCircleIcon className="h-8 w-8 text-slate-400" />
+                            <span className="font-medium text-slate-700">{user.email}</span>
+                        </div>
+                        <nav className="flex flex-col gap-2">
+                            {user?.isAdmin && (
+                                <Link to="/admin" className="flex items-center gap-3 px-3 py-2 text-slate-600 hover:bg-slate-50 rounded-lg">
+                                    <span className="font-medium">Admin Dashboard</span>
+                                </Link>
+                            )}
+                            <Link to="/profile" className="flex items-center gap-3 px-3 py-2 text-slate-600 hover:bg-slate-50 rounded-lg">
+                                <span className="font-medium">Mon Profil</span>
+                            </Link>
+                            <button onClick={logout} className="flex items-center gap-3 px-3 py-2 text-red-500 hover:bg-red-50 rounded-lg w-full text-left">
+                                <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                                <span className="font-medium">Se déconnecter</span>
+                            </button>
+                        </nav>
+                    </div>
+                )}
             </header>
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

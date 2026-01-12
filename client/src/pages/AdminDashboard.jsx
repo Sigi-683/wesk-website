@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
-import { HomeIcon, ArrowRightOnRectangleIcon, UserGroupIcon, HomeModernIcon, CheckCircleIcon, XCircleIcon, ShieldCheckIcon, DocumentArrowUpIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, ArrowRightOnRectangleIcon, UserGroupIcon, HomeModernIcon, CheckCircleIcon, XCircleIcon, ShieldCheckIcon, DocumentArrowUpIcon, TrashIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const AdminDashboard = () => {
     const { logout } = useAuth();
@@ -11,6 +11,7 @@ const AdminDashboard = () => {
     const [allowedUsers, setAllowedUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('chalets');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newChalet, setNewChalet] = useState({ name: '', description: '', capacity: 6 });
@@ -209,12 +210,64 @@ const AdminDashboard = () => {
             {/* Main Content */}
             <main className="flex-1 p-8 overflow-auto">
                 <div className="max-w-7xl mx-auto">
-                    <div className="mb-8 flex justify-between items-center md:hidden">
-                        <div className="flex items-center gap-3">
-                            <img src="/logo.png" className="h-8 w-8" alt="Logo" />
-                            <span className="font-bold text-xl text-slate-900">Admin</span>
+                    <div className="mb-8 flex flex-col md:hidden">
+                        <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                            <div className="flex items-center gap-3">
+                                <img src="/logo.png" className="h-8 w-8" alt="Logo" />
+                                <span className="font-bold text-xl text-slate-900">Admin</span>
+                            </div>
+                            <button
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                className="p-2 text-slate-500 hover:text-slate-700"
+                            >
+                                {isMobileMenuOpen ? (
+                                    <XMarkIcon className="h-6 w-6" />
+                                ) : (
+                                    <Bars3Icon className="h-6 w-6" />
+                                )}
+                            </button>
                         </div>
-                        <button onClick={logout} className="text-slate-500"><ArrowRightOnRectangleIcon className="h-6 w-6" /></button>
+
+                        {isMobileMenuOpen && (
+                            <div className="mt-4 bg-white rounded-xl shadow-lg border border-slate-200 p-4 animate-fade-in-down z-40">
+                                <nav className="space-y-2">
+                                    <button
+                                        onClick={() => { setActiveTab('chalets'); setIsMobileMenuOpen(false); }}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'chalets' ? 'bg-ski-accent text-white' : 'text-slate-600 hover:bg-slate-50'}`}
+                                    >
+                                        <HomeModernIcon className="h-5 w-5" />
+                                        Chalets
+                                    </button>
+                                    <button
+                                        onClick={() => { setActiveTab('users'); setIsMobileMenuOpen(false); }}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'users' ? 'bg-ski-accent text-white' : 'text-slate-600 hover:bg-slate-50'}`}
+                                    >
+                                        <UserGroupIcon className="h-5 w-5" />
+                                        Utilisateurs
+                                    </button>
+                                    <button
+                                        onClick={() => { setActiveTab('whitelist'); setIsMobileMenuOpen(false); }}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'whitelist' ? 'bg-ski-accent text-white' : 'text-slate-600 hover:bg-slate-50'}`}
+                                    >
+                                        <ShieldCheckIcon className="h-5 w-5" />
+                                        Whitelist
+                                    </button>
+                                    <div className="my-2 border-t border-slate-100"></div>
+                                    <Link
+                                        to="/dashboard"
+                                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                        <HomeIcon className="h-5 w-5" />
+                                        Vue Utilisateur
+                                    </Link>
+                                    <button onClick={logout} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-500 hover:bg-red-50 transition-colors">
+                                        <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                                        Déconnexion
+                                    </button>
+                                </nav>
+                            </div>
+                        )}
                     </div>
 
                     <div className="mb-8 flex justify-between items-center">

@@ -36,7 +36,7 @@ const Landing = () => {
                         </span>
                     </div>
 
-                    <h1 className="text-6xl md:text-8xl font-black text-white tracking-tight drop-shadow-xl p-2 uppercase">
+                    <h1 className="text-4xl md:text-6xl lg:text-8xl font-black text-white tracking-tight drop-shadow-xl p-2 uppercase">
                         WESK PYCOLO
                     </h1>
 
@@ -54,21 +54,21 @@ const Landing = () => {
                             <CalendarDaysIcon className="h-6 w-6" />
                             <div className="text-left leading-tight">
                                 <span className="block text-xs uppercase opacity-70">Dates</span>
-                                <span className="font-bold">30 Jan - 01 Fév</span>
+                                <span className="font-bold text-sm md:text-base">30 Jan - 01 Fév</span>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 text-white/90 bg-white/10 backdrop-blur-sm px-5 py-2.5 rounded-2xl border border-white/20">
                             <MapPinIcon className="h-6 w-6" />
                             <div className="text-left leading-tight">
                                 <span className="block text-xs uppercase opacity-70">Lieu</span>
-                                <span className="font-bold">Alpe d'Huez</span>
+                                <span className="font-bold text-sm md:text-base">Alpe d'Huez</span>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 text-white/90 bg-white/10 backdrop-blur-sm px-5 py-2.5 rounded-2xl border border-white/20">
                             <UserGroupIcon className="h-6 w-6" />
                             <div className="text-left leading-tight">
                                 <span className="block text-xs uppercase opacity-70">Places</span>
-                                <span className="font-bold text-yellow-300">Dernières Dispos</span>
+                                <span className="font-bold text-yellow-300 text-sm md:text-base">Dernières Dispos</span>
                             </div>
                         </div>
                     </div>
@@ -194,7 +194,7 @@ const Landing = () => {
                     <p className="text-sm text-slate-600">&copy; 2026 WESK Pycolo - BDE EPITA Lyon. Tous droits réservés.</p>
                 </div>
             </footer>
-        </div>
+        </div >
     );
 };
 
