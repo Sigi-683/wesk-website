@@ -11,9 +11,12 @@ app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); // Allow images to be loaded from other origins if needed, or adjust as per requirement
 
 // Rate Limiting
+// Rate Limiting
+app.set('trust proxy', 1); // Trust first proxy (Nginx)
+
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per windowMs
+    max: 1000, // Increased limit for admin usage/multiple users behind NAT
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     message: 'Too many requests from this IP, please try again after 15 minutes'
